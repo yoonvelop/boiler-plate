@@ -15,7 +15,7 @@ app.use(cookieParser())
 
 // mongoose 연결
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://yoonvelop:qwer1234@boilerplate-it5ke.mongodb.net/test?retryWrites=true&w=majority',{
+mongoose.connect(config.mongoURI,{
     useNewUrlParser : true, useUnifiedTopology : true, useCreateIndex :true, useFindAndModify :false 
 }).then(()=> console.log('MongoDB Connected...')) 
 .catch(err => console.log(err)) 
