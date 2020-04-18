@@ -6,6 +6,7 @@ const port = 5000
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const { User } = require('./models/User')
+const { auth } = require('./middleware/auth')
 
 const config = require('./config/key')
 
@@ -23,7 +24,7 @@ mongoose.connect(config.mongoURI,{
 app.get('/', (req, res) => res.send('Hello World!'))
 
 // 회원가입 라우터
-app.post('/register', (req, res) => {
+app.post('/api/users/register', (req, res) => {
     // 회원가입 시 필요한 정보들을 client에서 가져오면 DB에 넣어줌
     const user = new User(req.body)
 
@@ -36,7 +37,7 @@ app.post('/register', (req, res) => {
 })
 
 // 로그인 라우터
-app.post('/login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
    // 1. 넘어온 이메일이 DB에 존재하는지 확인
    User.findOne({ email : req.body.email }, (err, user)=>{
        if(!user){ // 존재x 경우
@@ -62,6 +63,19 @@ app.post('/login', (req, res) => {
    })
 })
 
+app.get('/api/users/auth',auth,(req,res)=>{ // auth : 미들웨어
+    // 미들웨어를 통과해야 여기 올수 있으므로 아래는 auth가 있음을 의미
+    res.status(200).json({
+        _id : req.user._id,
+        isAdmin : req.user.role ===0 ? false :true,
+        isAuth : true,
+        email : req.user.email,
+        name : req.user.name,
+        lastname : req.user.lastname,
+        role : req.user.role,
+        image : req.user.image
+    })
+})
 
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
