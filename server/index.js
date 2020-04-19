@@ -22,6 +22,7 @@ mongoose.connect(config.mongoURI,{
 .catch(err => console.log(err)) 
 
 app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/api/hello', (req, res) => res.send('Hello World!'))
 
 // 회원가입 라우터
 app.post('/api/users/register', (req, res) => {
